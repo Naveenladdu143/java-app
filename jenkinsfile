@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    stages {
+        stage("Build") {
+            steps {
+                sh 'docker build -t java-app .'
+            }
+        }
+        stage("Run") {
+            steps {
+                sh 'docker run -d -p 8000:80 java-app'
+            }
+        }
+        stage("Deploy") {
+            steps {
+                sh 'docker tag java-app naveenladdu123/java-app:v1.0'
+                sh 'docker push naveenladdu123/java-app:v1.0'
+            }
+        }
+        stage("Push") {
+            steps {
+                sh 'docker-compose down && docker-compose up'
+            }
+        }
+    }
+}
+
